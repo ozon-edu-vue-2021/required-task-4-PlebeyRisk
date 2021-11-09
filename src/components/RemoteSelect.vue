@@ -90,7 +90,7 @@ export default {
       immediate: true,
       handler(value) {
         if (value && typeof value !== "object") return;
-        this.setSelected(value);
+        this.setSelected(value, false);
       },
     },
   },
@@ -129,7 +129,7 @@ export default {
     this.debouncedLoadItems();
   },
   methods: {
-    setSelected(item) {
+    setSelected(item, needEmit = true) {
       if (item && this.isItemSelected(item)) return;
       this.selectedItems = item ? [item] : [];
       this.searchValue = item ? item[this.textField] : "";
@@ -138,7 +138,9 @@ export default {
       } else {
         this.debouncedLoadItems();
       }
-      this.$emit("change", item);
+      if (needEmit) {
+        this.$emit("change", item);
+      }
     },
     showDropdown() {
       this.debouncedLoadItems();

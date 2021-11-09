@@ -340,12 +340,11 @@ export default {
   data() {
     return {
       isChangeName: false,
-      data: this.getDefaultData({ withoutPrevious: true }),
+      data: this.getDefaultData(),
       genderTypes: [
         { value: "M", text: "Мужской" },
         { value: "F", text: "Женский" },
       ],
-      defaultData: this.getDefaultData(),
     };
   },
   computed: {
@@ -383,18 +382,36 @@ export default {
           : {},
       };
     },
+    defaultData() {
+      let data = cloneDeep(DEFAULT_DATA);
+      if (!this.data?.nationality) {
+        delete data.passport;
+      } else if (this.showForeignPassportBlock) {
+        delete data.passport.series;
+        delete data.passport.dateIssue;
+      } else {
+        delete data.passport.country;
+        delete data.passport.type;
+        delete data.passport.surname;
+        delete data.passport.name;
+      }
+      return data;
+    },
   },
   methods: {
-    getDefaultData({ withoutPrevious = false } = {}) {
-      const cloneData = cloneDeep(DEFAULT_DATA);
-      if (withoutPrevious) {
+    getDefaultData() {
+      const cloneData = cloneDeep(this.defaultData || DEFAULT_DATA);
+      if (!this.isChangeName) {
         delete cloneData.previous;
+      }
+      if (!this.data?.nationality) {
+        delete cloneData.passport;
       }
       return cloneData;
     },
     reset() {
-      this.data = this.getDefaultData({ withoutPrevious: true });
       this.isChangeName = false;
+      this.data = this.getDefaultData();
       this.$refs.form?.reset?.();
     },
     async onSubmit(validate) {
@@ -425,7 +442,7 @@ export default {
         delete this.data.previous;
       }
     },
-    onNationalityChangeHandler() {
+    onNationalityChangeHandler(e) {
       let newData = {
         ...this.data,
         passport: { ...this.defaultData.passport },
