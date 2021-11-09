@@ -1,0 +1,11 @@
+#app {
+  --primary-color: #1F3DFF;
+  --primary-lighten-color: #f6f5ff;
+  --gray-500-color: #9aa4b3;
+  --gray-400-color: #b7bfc9;
+  --gray-300-color: #d3d8de;
+  --white-color: #fff;
+  --black-color: #000;
+  --black-700-color: #1c1f1e;
+  --error-color: #ff6161;
+}

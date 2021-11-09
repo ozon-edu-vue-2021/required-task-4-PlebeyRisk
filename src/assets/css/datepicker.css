@@ -1,0 +1,19 @@
+@import './variables.css';
+
+.mx-datepicker input {
+  border: 2px solid var(--gray-300-color);
+  border-radius: 5px;
+  height: 45px;
+  padding: 0 5px;
+  font-size: 16px;
+  line-height: 16px;
+}
+.mx-datepicker input:hover {
+  border-color: var(--gray-300-color);
+}
+.mx-datepicker input:focus {
+  border-color: var(--primary-color);
+}
+.mx-datepicker.error input, .mx-datepicker.error input:hover, .mx-datepicker.error input:focus {
+  border-color: var(--error-color);
+}

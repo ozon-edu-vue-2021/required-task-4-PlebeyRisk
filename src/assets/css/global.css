@@ -1,0 +1,31 @@
+@import url(./variables.css);
+
+input {
+  border: 2px solid var(--gray-300-color);
+  border-radius: 5px;
+  height: 45px;
+  padding: 0 5px;
+  font-size: 16px;
+  line-height: 16px;
+}
+input:hover {
+  outline: none !important;
+  border-color: var(--gray-300-color);
+}
+input:focus {
+  outline: none !important;
+  border-color: var(--primary-color);
+}
+input.error, input.error:hover, input.error:focus {
+  border-color: var(--error-color);
+}
+input::placeholder {color: var(--gray-400-color);}
+input::-webkit-input-placeholder {color: var(--gray-400-color);}
+input::-ms-input-placeholder {color: var(--gray-400-color);}
+input:-moz-placeholder {color: var(--gray-400-color); opacity: 1;}
+input::-moz-placeholder {color: var(--gray-400-color); opacity: 1;}
+input:-ms-input-placeholder {color: var(--gray-400-color);}
+
+.full-width {
+  width: 100%;
+}
