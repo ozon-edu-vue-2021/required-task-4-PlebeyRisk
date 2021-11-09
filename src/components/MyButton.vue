@@ -14,6 +14,7 @@
 
 <script>
 import Loader from "./Loader.vue";
+import DEFAULT_TYPE_VALUES from "../constants";
 
 export default {
   name: "MyButton",
@@ -21,14 +22,8 @@ export default {
     Loader,
   },
   props: {
-    loading: {
-      type: Boolean,
-      default: false,
-    },
-    error: {
-      type: Boolean,
-      default: false,
-    },
+    loading: DEFAULT_TYPE_VALUES.BOOLEAN(),
+    error: DEFAULT_TYPE_VALUES.BOOLEAN(),
   },
   computed: {
     mainClass() {

@@ -37,11 +37,12 @@
 
 <script>
 import ClickOutside from "vue-click-outside";
-import { debounce } from "lodash";
+import debounce from "lodash/debounce";
 import { errorHandler } from "../error";
 import Icon from "./Icon.vue";
 import Loader from "./Loader.vue";
 import api from "../utils/api";
+import DEFAULT_TYPE_VALUES from "../constants";
 
 export default {
   name: "RemoteSelect",
@@ -61,10 +62,7 @@ export default {
       type: [Array, Object],
       default: () => [],
     },
-    fullWidth: {
-      type: Boolean,
-      default: false,
-    },
+    fullWidth: DEFAULT_TYPE_VALUES.BOOLEAN(),
     textField: {
       type: String,
       default: "name",
@@ -74,10 +72,7 @@ export default {
       default: "id",
     },
     apiEntity: String,
-    error: {
-      type: Boolean,
-      default: false,
-    },
+    error: DEFAULT_TYPE_VALUES.BOOLEAN(),
   },
   data() {
     return {

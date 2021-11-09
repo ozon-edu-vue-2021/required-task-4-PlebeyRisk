@@ -2,13 +2,13 @@ import { isAfter, parseISO } from "date-fns";
 
 export const cyrillic = {
   validate: (value) => {
-    return /^[а-яА-яё]+$/i.test(value) || "Разрешены только русские буквы";
+    return /^[а-яА-яё]+$/i.test(value) || "Поле должно содержать только русские буквы";
   },
 };
 
 export const latin = {
   validate: (value) => {
-    return /^[a-zA-Z]+$/i.test(value) || "Разрешены только английские буквы";
+    return /^[a-zA-Z]+$/i.test(value) || "Поле должно содержать только английские буквы";
   },
 };
 

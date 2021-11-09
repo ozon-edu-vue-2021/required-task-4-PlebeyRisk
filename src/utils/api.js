@@ -3,14 +3,15 @@ import citizenships from "../assets/data/citizenships.json";
 import passportTypes from "../assets/data/passport-types.json";
 
 const getData = (data, searchText = "", key) => {
+  const search = searchText?.toLowerCase();
   return new Promise((res) =>
     setTimeout(
       () =>
         res(
           (data || []).filter((item) =>
             key
-              ? item[key]?.startsWith(searchText)
-              : item.startsWith(searchText)
+              ? item[key]?.toLowerCase()?.startsWith(search)
+              : item?.toLowerCase()?.startsWith(search)
           )
         ),
       50

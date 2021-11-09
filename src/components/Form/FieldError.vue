@@ -5,13 +5,12 @@
 </template>
 
 <script>
+import DEFAULT_TYPE_VALUES from "../../constants";
+
 export default {
   name: "FieldError",
   props: {
-    errors: {
-      type: Array,
-      default: () => [],
-    },
+    errors: DEFAULT_TYPE_VALUES.ARRAY(),
   },
   computed: {
     error() {

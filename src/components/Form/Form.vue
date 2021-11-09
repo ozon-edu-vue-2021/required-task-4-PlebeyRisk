@@ -100,6 +100,7 @@
                 textField="nationality"
                 fullWidth
                 :error="!!errors.length"
+                @change="onNationalityChangeHandler"
               />
             </FormField>
             <div :class="[$style['empty-field'], $style['form-field']]"></div>
@@ -117,6 +118,7 @@
                   v-model="data.passport.series"
                   fullWidth
                   :error="!!errors.length"
+                  mask="####"
                 />
               </FormField>
               <FormField
@@ -130,6 +132,7 @@
                   v-model="data.passport.number"
                   fullWidth
                   :error="!!errors.length"
+                  mask="######"
                 />
               </FormField>
             </div>
@@ -246,6 +249,7 @@
               :class="$style['form-field']"
               title="Фамилия"
               name="previousSurname"
+              :rules="fieldRules.previous.surname"
             >
               <MyInput
                 :class="$style.input"
@@ -274,11 +278,7 @@
 
       <FormRow :class="$style.row">
         <div :class="$style.actions">
-          <MyButton
-            :loading="isLoading"
-            :error="failed"
-            >Отправить</MyButton
-          >
+          <MyButton :loading="isLoading" :error="failed">Отправить</MyButton>
         </div>
       </FormRow>
     </form>
@@ -287,7 +287,7 @@
 
 <script>
 import { ValidationObserver } from "vee-validate";
-import { cloneDeep } from "lodash";
+import cloneDeep from "lodash/cloneDeep";
 import MyDatePicker from "../MyDatePicker.vue";
 import RemoteSelect from "../RemoteSelect.vue";
 import FormField from "../Form/FormField.vue";
@@ -296,6 +296,7 @@ import FormRow from "../Form/FormRow.vue";
 import MyInput from "../MyInput.vue";
 import MyButton from "../MyButton.vue";
 import RadioButtonGroup from "../RadioButtonGroup.vue";
+import DEFAULT_TYPE_VALUES from "../../constants";
 
 const DEFAULT_DATA = {
   name: "",
@@ -334,19 +335,17 @@ export default {
     MyButton,
   },
   props: {
-    loading: {
-      type: Boolean,
-      default: false,
-    },
+    loading: DEFAULT_TYPE_VALUES.BOOLEAN(),
   },
   data() {
     return {
       isChangeName: false,
-      data: this.getDefaultData(),
+      data: this.getDefaultData({ withoutPrevious: true }),
       genderTypes: [
         { value: "M", text: "Мужской" },
         { value: "F", text: "Женский" },
       ],
+      defaultData: this.getDefaultData(),
     };
   },
   computed: {
@@ -372,16 +371,29 @@ export default {
           name: "latin",
           surname: "latin",
         },
-        previous: {},
+        previous: this.isChangeName
+          ? {
+              name: `required|${
+                this.showForeignPassportBlock ? "latin" : "cyrillic"
+              }`,
+              surname: `required|${
+                this.showForeignPassportBlock ? "latin" : "cyrillic"
+              }`,
+            }
+          : {},
       };
     },
   },
   methods: {
-    getDefaultData() {
-      return cloneDeep(DEFAULT_DATA);
+    getDefaultData({ withoutPrevious = false } = {}) {
+      const cloneData = cloneDeep(DEFAULT_DATA);
+      if (withoutPrevious) {
+        delete cloneData.previous;
+      }
+      return cloneData;
     },
     reset() {
-      this.data = this.getDefaultData();
+      this.data = this.getDefaultData({ withoutPrevious: true });
       this.isChangeName = false;
       this.$refs.form?.reset?.();
     },
@@ -402,7 +414,27 @@ export default {
       this.$emit("submit", this.data);
     },
     onChangeNameHandler(value) {
+      if (value) {
+        this.data = {
+          ...this.data,
+          previous: { ...this.defaultData.previous },
+        };
+      }
       this.isChangeName = !!value;
+      if (!value) {
+        delete this.data.previous;
+      }
+    },
+    onNationalityChangeHandler() {
+      let newData = {
+        ...this.data,
+        passport: { ...this.defaultData.passport },
+        previous: { ...this.defaultData.previous },
+      };
+      if (!this.isChangeName) {
+        delete newData.previous;
+      }
+      this.data = newData;
     },
   },
 };
