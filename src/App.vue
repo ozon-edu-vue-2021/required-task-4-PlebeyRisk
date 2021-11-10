@@ -9,6 +9,8 @@
 import Form from "./components/Form/Form.vue";
 import api from "./utils/api";
 import { errorHandler } from "./error";
+import omitBy from "lodash/omitBy";
+import isEmpty from "lodash/isEmpty";
 
 export default {
   name: "App",
@@ -26,10 +28,20 @@ export default {
       if (!resetFormFunc || typeof resetFormFunc !== "function") return;
       resetFormFunc();
     },
+    prepareDataForSending(data) {
+      let result = { ...data };
+      if (result?.passport) {
+        result.passport = omitBy(result.passport, isEmpty);
+      }
+      if (result?.previous) {
+        result.previous = omitBy(result.previous, isEmpty);
+      }
+      return omitBy(result, isEmpty);
+    },
     async onFormSubmitHandler(data) {
       this.isPending = true;
       try {
-        await api.sendData(data);
+        await api.sendData(this.prepareDataForSending(data));
         this.resetForm();
         this.$notify({
           group: "main",

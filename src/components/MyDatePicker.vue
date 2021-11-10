@@ -1,7 +1,8 @@
 <template>
   <DatePicker
+    ref="datePicker"
     :class="mainClass"
-    v-model="dateValue"
+    v-model="inputValue"
     valueType="YYYY-MM-DD"
     format="DD.MM.YYYY"
     @change="changeDateHandler"
@@ -40,7 +41,6 @@ export default {
   data() {
     return {
       inputValue: null,
-      dateValue: null,
       isShowPanel: false,
     };
   },
@@ -49,6 +49,9 @@ export default {
       immediate: true,
       handler(value) {
         this.inputValue = value || null;
+        if (value === "" || value === null) {
+          this.clear();
+        }
       },
     },
   },
@@ -66,6 +69,9 @@ export default {
   methods: {
     changeDateHandler(value) {
       this.$emit("change", value);
+    },
+    clear() {
+      this.$refs.datePicker?.clear?.();
     },
   },
 };

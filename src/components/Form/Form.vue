@@ -288,6 +288,7 @@
 <script>
 import { ValidationObserver } from "vee-validate";
 import cloneDeep from "lodash/cloneDeep";
+import omit from "lodash/omit";
 import MyDatePicker from "../MyDatePicker.vue";
 import RemoteSelect from "../RemoteSelect.vue";
 import FormField from "../Form/FormField.vue";
@@ -385,27 +386,28 @@ export default {
     defaultData() {
       let data = cloneDeep(DEFAULT_DATA);
       if (!this.data?.nationality) {
-        delete data.passport;
+        data = omit(data, "passport");
       } else if (this.showForeignPassportBlock) {
-        delete data.passport.series;
-        delete data.passport.dateIssue;
+        data = omit(data, ["passport.series", "passport.dateIssue"]);
       } else {
-        delete data.passport.country;
-        delete data.passport.type;
-        delete data.passport.surname;
-        delete data.passport.name;
+        data = omit(data, [
+          "passport.country",
+          "passport.type",
+          "passport.surname",
+          "passport.name",
+        ]);
       }
       return data;
     },
   },
   methods: {
     getDefaultData() {
-      const cloneData = cloneDeep(this.defaultData || DEFAULT_DATA);
+      let cloneData = cloneDeep(this.defaultData || DEFAULT_DATA);
       if (!this.isChangeName) {
-        delete cloneData.previous;
+        cloneData = omit(cloneData, "previous");
       }
       if (!this.data?.nationality) {
-        delete cloneData.passport;
+        cloneData = omit(cloneData, "passport");
       }
       return cloneData;
     },
@@ -442,14 +444,14 @@ export default {
         delete this.data.previous;
       }
     },
-    onNationalityChangeHandler(e) {
+    onNationalityChangeHandler() {
       let newData = {
         ...this.data,
         passport: { ...this.defaultData.passport },
         previous: { ...this.defaultData.previous },
       };
       if (!this.isChangeName) {
-        delete newData.previous;
+        newData = omit(newData, "previous");
       }
       this.data = newData;
     },
